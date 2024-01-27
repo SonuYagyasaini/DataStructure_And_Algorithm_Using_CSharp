@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 
 public class Solution
 {
     public static void Main(string[] args)
     {
-        int[] nums = { 1, 1, 2 };
-        Console.Write(RemoveDuplicates(nums));
+        string? input = Console.ReadLine(); 
+        Console.Write("");
     }
 
     //https://leetcode.com/problems/merge-sorted-array/?envType=study-plan-v2&envId=top-interview-150
@@ -405,6 +406,39 @@ public class Solution
             string[] input = s.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             Array.Reverse(input);
             return string.Join(" ", input);
+        }
+    }
+
+    //https://leetcode.com/problems/longest-common-prefix/description/?envType=study-plan-v2&envId=top-interview-150
+    public string LongestCommonPrefix(string[] sonu)
+    {
+        int i = 0;
+        StringBuilder sb = new();
+        string sStr = sonu.OrderBy(s => s.Length).First();
+        foreach (char c in sStr)
+        {
+            if (sonu.Any(s => s[i] != c))
+            {
+                break;
+            }
+            sb.Append(c);
+            i++;
+        }
+        return sb.ToString();
+    }
+
+    //https://leetcode.com/problems/median-of-two-sorted-arrays/description/
+    public double FindMedianSortedArrays(int[] nums1, int[] nums2)
+    {
+        int[] mArr = nums1.Concat(nums2).ToArray();
+        Array.Sort(mArr);
+        if (mArr.Length % 2 == 0)
+        {
+            return (mArr[mArr.Length / 2 - 1] + mArr[mArr.Length / 2]) / 2.0;
+        }
+        else
+        {
+            return mArr[mArr.Length / 2];
         }
     }
 }
