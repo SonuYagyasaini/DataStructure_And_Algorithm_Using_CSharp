@@ -6,9 +6,11 @@ public class Solution
 {
     public static void Main(string[] args)
     {
-        string? input = Console.ReadLine(); 
+        string? input = Console.ReadLine();
         Console.Write("");
     }
+
+    #region Array/String Questions
 
     //https://leetcode.com/problems/merge-sorted-array/?envType=study-plan-v2&envId=top-interview-150
     static void Merge(int[] nums1, int m, int[] nums2, int n)
@@ -397,18 +399,6 @@ public class Solution
             return filteredWords.Last().Length;
         }
     }
-
-    //https://leetcode.com/problems/reverse-words-in-a-string/description/?envType=study-plan-v2&envId=top-interview-150
-    public class ReverseWordsInSen
-    {
-        public string ReverseWords(string s)
-        {
-            string[] input = s.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-            Array.Reverse(input);
-            return string.Join(" ", input);
-        }
-    }
-
     //https://leetcode.com/problems/longest-common-prefix/description/?envType=study-plan-v2&envId=top-interview-150
     public string LongestCommonPrefix(string[] sonu)
     {
@@ -426,6 +416,214 @@ public class Solution
         }
         return sb.ToString();
     }
+
+    //https://leetcode.com/problems/reverse-words-in-a-string/description/?envType=study-plan-v2&envId=top-interview-150
+    public class ReverseWordsInSen
+    {
+        public string ReverseWords(string s)
+        {
+            string[] input = s.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            Array.Reverse(input);
+            return string.Join(" ", input);
+        }
+    }
+
+    //Zigzag Conversion pending
+
+    //https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/description/?envType=study-plan-v2&envId=top-interview-150
+    public int StrStr(string hStack, string needle)
+    {
+        for (int i = 0; i < hStack.Length - needle.Length + 1; i++)
+        {
+            if (hStack.Substring(i, needle.Length) == needle)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    //https://leetcode.com/problems/text-justification/description/?envType=study-plan-v2&envId=top-interview-150
+    public IList<string> FullJustify(string[] words, int maxWidth)
+    {
+        var ans = new List<string>();
+        var cur = new List<string>();
+        int numLetters = 0;
+        foreach (var word in words)
+        {
+            if (word.Length + cur.Count + numLetters > maxWidth)
+            {
+                for (int i = 0; i < maxWidth - numLetters; i++)
+                {
+                    cur[i % (cur.Count - 1 > 0 ? cur.Count - 1 : 1)] += " ";
+                }
+                ans.Add(string.Join("", cur));
+                cur.Clear();
+                numLetters = 0;
+            }
+            cur.Add(word);
+            numLetters += word.Length;
+        }
+        string lastL = string.Join(" ", cur);
+        while (lastL.Length < maxWidth)
+            lastL += " ";
+        ans.Add(lastL);
+        return ans;
+    }
+
+    #endregion
+
+    #region Two Pointers Technique Questions
+
+    //https://leetcode.com/problems/valid-palindrome/description/?envType=study-plan-v2&envId=top-interview-150
+    public bool IsPalindrome(string s)
+    {
+        if (string.IsNullOrWhiteSpace(s))
+        {
+            return true;
+        }
+        string input = new string(s.Where(char.IsLetterOrDigit).Select(char.ToLower).ToArray());
+        int left = 0, right = input.Length - 1;  //Two Pointer Approach
+        while (left < right)
+        {
+            if (input[left] != input[right])
+                return false;
+            left++;
+            right--;
+        }
+        return true;
+    }
+
+    //https://leetcode.com/problems/is-subsequence/description/?envType=study-plan-v2&envId=top-interview-150
+    public bool IsSubsequence(string s, string t)
+    {
+        char[] input = s.ToLower().ToCharArray();
+        char[] target = t.ToLower().ToCharArray();
+        int left = 0;
+        int right = 0;
+        while (left < input.Length && right < target.Length)
+        {
+            if (input[left] == target[right])
+            {
+                left++;
+            }
+            right++;
+        }
+        return left == input.Length;
+    }
+
+    //https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/description/?envType=study-plan-v2&envId=top-interview-150
+    public int[] TwoSum(int[] numbers, int target)
+    {
+        int lefTrav = 0;
+        int rigTrav = numbers.Length - 1;
+        while (lefTrav < rigTrav)
+        {
+            int sum = numbers[lefTrav] + numbers[rigTrav];
+            if (sum == target)
+                break;
+            if (sum < target)
+                lefTrav++;
+            if (sum > target)
+                rigTrav--;
+        }
+        return new int[] { lefTrav + 1, rigTrav + 1 };
+    }
+
+    //https://leetcode.com/problems/container-with-most-water/description/?envType=study-plan-v2&envId=top-interview-150
+    public int MaxArea(int[] height)
+    {
+        int maxWater = 0;
+        int leftP = 0;
+        int rightP = height.Length - 1;
+        while (leftP < rightP)
+        {
+            if (height[leftP] < height[rightP])
+            {
+                maxWater = Math.Max(maxWater, (height[leftP] * (rightP - leftP)));
+                leftP++;
+            }
+            else
+            {
+                maxWater = Math.Max(maxWater, (height[rightP] * (rightP - leftP)));
+                rightP--;
+            }
+        }
+        return maxWater;
+    }
+
+    //https://leetcode.com/problems/3sum/description/?envType=study-plan-v2&envId=top-interview-150
+
+    // 3 Sum solution pending...
+
+    #endregion
+
+    #region Kadane's Algorithm Questions
+
+    //https://leetcode.com/problems/maximum-subarray/description/?envType=study-plan-v2&envId=top-interview-150
+    public int maxSubArray(int[] nums)
+    {
+        int maxSum = int.MinValue;
+        int sum = 0;
+        for (int i = 0; i < nums.Length; i++)
+        {
+            sum += nums[i];
+            maxSum = Math.Max(maxSum, sum);
+            if (sum < 0)
+            {
+                sum = 0;
+            }
+        }
+        return maxSum;
+    }
+
+    //https://leetcode.com/problems/maximum-sum-circular-subarray/description/?envType=study-plan-v2&envId=top-interview-150
+    public class Kadanes
+    {
+        public int MaxSubarraySumCircular(int[] nums)
+        {
+            int maxSubarraySum = GetMaxSubarraySum(nums);
+            int minSubarraySum = GetMinSubarraySum(nums);
+
+            if (minSubarraySum == nums.Sum())
+            {
+                return maxSubarraySum;
+            }
+
+            return Math.Max(maxSubarraySum, nums.Sum() - minSubarraySum);
+        }
+
+        private int GetMaxSubarraySum(int[] nums)
+        {
+            int maxEndingHere = 0;
+            int maxSoFar = int.MinValue;
+
+            foreach (int num in nums)
+            {
+                maxEndingHere = Math.Max(maxEndingHere + num, num);
+                maxSoFar = Math.Max(maxSoFar, maxEndingHere);
+            }
+
+            return maxSoFar;
+        }
+
+        private int GetMinSubarraySum(int[] nums)
+        {
+            int minEndingHere = 0;
+            int minSoFar = int.MaxValue;
+
+            foreach (int num in nums)
+            {
+                minEndingHere = Math.Min(minEndingHere + num, num);
+                minSoFar = Math.Min(minSoFar, minEndingHere);
+            }
+
+            return minSoFar;
+        }
+    }
+
+
+    #endregion
 
     //https://leetcode.com/problems/median-of-two-sorted-arrays/description/
     public double FindMedianSortedArrays(int[] nums1, int[] nums2)
